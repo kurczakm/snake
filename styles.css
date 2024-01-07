@@ -1,0 +1,14 @@
+body {
+    background-color: black;
+}
+
+td {
+    width: 20px;
+    height: 20px;
+    background-color: gray;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
