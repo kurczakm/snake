@@ -1,5 +1,8 @@
 var BOARD_WIDTH;
-var BOARD_HEIGTH;
+var BOARD_HEIGHT;
+
+var playerName = 'player1';
+var playerColor = 'purple';
 
 const BOARD_TR_PREFIX = 'board_tr_';
 const BOARD_TD_PREFIX = 'board_td_';
@@ -18,7 +21,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('start_button').addEventListener('click', () => {
         const startAction = {
-            action: 'start'
+            action: 'start',
+            player: {
+                name: playerName,
+                color: playerColor
+            }
         }
         websocket.send(JSON.stringify(startAction));
     });
@@ -47,10 +54,10 @@ function handleMessage(data) {
     switch (parsedData.type) {
         case 'game_info':
             BOARD_WIDTH = parsedData.width;
-            BOARD_HEIGTH = parsedData.height;
+            BOARD_HEIGHT = parsedData.height;
             createBoard();
             break;
-        case 'positions':
+        case 'player_info':
             renderPosition(parsedData);
             break;
     }
@@ -59,7 +66,8 @@ function handleMessage(data) {
 function move(direction, websocket) {
     const moveAction = {
         action: 'move',
-        direction: direction
+        direction: direction,
+        playerName: playerName
     };
 
     websocket.send(JSON.stringify(moveAction));
@@ -70,7 +78,7 @@ function createBoard() {
     
     const board = document.createElement('table');
     board.id = 'board';
-    for (var i = 0; i < BOARD_HEIGTH; i++) {
+    for (var i = 0; i < BOARD_HEIGHT; i++) {
         const tr = document.createElement('tr');
         tr.id = `${BOARD_TR_PREFIX}${i}`;
         for (var j = 0; j < BOARD_WIDTH; j++) {
@@ -81,6 +89,8 @@ function createBoard() {
         board.appendChild(tr);
     }
     body.appendChild(board);
+
+    clearBoard();
 }
 
 function getBoardCell(x, y) {
@@ -96,17 +106,30 @@ function getBoardCell(x, y) {
         throw new Error(`Argument x: ${x} is out of board width!`);
     }
 
-    if (y < 0 || y >= BOARD_HEIGTH) {
+    if (y < 0 || y >= BOARD_HEIGHT) {
         throw new Error(`Argument y: ${y} is out of board height!`);
     }
 
     return document.getElementById(`${BOARD_TD_PREFIX}${y}_${x}`);
 }
 
+function clearBoard() {
+    const cells = document.getElementsByTagName('td');
+    console.log(cells);
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].style.backgroundColor = 'gray';
+    }
+}
+
+
 function renderPosition(info) {
     console.log(info.players);
+    clearBoard();
+
     info.players.forEach((player) => {
-        const headCell = getBoardCell(player.head[0], player.head[1]);
-        headCell.style.backgroundColor = 'red';
+        player.bodySegments.forEach((segment) => {
+            const cell = getBoardCell(segment[0], segment[1]);
+            cell.style.backgroundColor = playerColor;
+        });
     });
 }

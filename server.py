@@ -2,28 +2,14 @@ import asyncio
 import websockets
 import json
 
-BOARD_WIDTH = 10
-BOARD_HEIGHT = 10
-
-POSITION = [0, 0]
-
-INFO = {
-    'type': 'positions',
-    'players': [
-        {
-            'name': 'player1',
-            'color': 'blue',
-            'head': POSITION
-        }
-    ]
-}
+from game import BOARD_WIDTH, BOARD_HEIGHT, Player, players
 
 
 async def handler(websocket):
     print('Game initialized')
 
     async for message in websocket:
-        await handleMessage(message, websocket)
+        await handle_message(message, websocket)
 
 
 async def main():
@@ -31,46 +17,33 @@ async def main():
         await asyncio.Future()  # run forever
 
 
-async def handleMessage(message, websocket):
+async def handle_message(message, websocket):
     data = json.loads(message)
     print(data)
 
     match data['action']:
         case 'start':
-            await sendGameInfo(websocket)
+            await send_game_info(websocket)
+            player1 = Player(data['player']['name'], data['player']['color'], [[1, 1]])
+            players[player1.name] = player1
         case 'move':
-            move(data['direction'])
-            await sendPostion(websocket)
+            player = players[data['playerName']]
+            direction = data['direction']
+            player.move(direction)
+            await send_position(websocket, player)
 
 
-def move(direction):
-    match direction:
-        case 'left':
-            if (POSITION[0] > 0):
-                POSITION[0] = POSITION[0] - 1
-        case 'right':
-            if (POSITION[0] < BOARD_WIDTH - 1):
-                POSITION[0] = POSITION[0] + 1
-        case 'up':
-            if (POSITION[1] > 0):
-                POSITION[1] = POSITION[1] - 1
-        case 'down':
-            if (POSITION[1] < BOARD_HEIGHT - 1):
-                POSITION[1] = POSITION[1] + 1
-
-
-
-async def sendGameInfo(websocket):
-    gameInfo = {
+async def send_game_info(websocket):
+    game_info = {
         'type': 'game_info',
         'width': BOARD_WIDTH,
         'height': BOARD_HEIGHT
     }
-    await websocket.send(json.dumps(gameInfo))
+    await websocket.send(json.dumps(game_info))
 
 
-async def sendPostion(websocket):
-    await websocket.send(json.dumps(INFO))
+async def send_position(websocket, player):
+    await websocket.send(json.dumps(player.get_player_info()))
 
 
 if __name__ == '__main__':
