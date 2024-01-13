@@ -57,7 +57,7 @@ function handleMessage(data) {
             BOARD_HEIGHT = parsedData.height;
             createBoard();
             break;
-        case 'players_info':
+        case 'status':
             renderPosition(parsedData);
             break;
     }
@@ -123,7 +123,7 @@ function clearBoard() {
 
 
 function renderPosition(info) {
-    console.log(info.players);
+    console.log(info);
     clearBoard();
 
     info.players.forEach((player) => {
@@ -131,5 +131,10 @@ function renderPosition(info) {
             const cell = getBoardCell(segment[0], segment[1]);
             cell.style.backgroundColor = playerColor;
         });
+    });
+
+    info.food.forEach((food) => {
+        const cell = getBoardCell(food[0], food[1]);
+        cell.style.backgroundColor = 'red';
     });
 }
