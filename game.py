@@ -20,6 +20,7 @@ async def play(server):
 def next_turn():
     for playerName in players:
         player = players[playerName]
+        player.last_direction = player.direction
         player.move()
 
 
@@ -74,6 +75,7 @@ class Player:
         self.color = color
         self.body_segments = body_segments
         self.direction = direction
+        self.last_direction = direction
 
     def move(self):
         x, y = self.body_segments[0]
@@ -105,16 +107,16 @@ class Player:
             add_food()
 
     def setDirection(self, direction):
-        if direction == 'up' and self.direction == 'down':
+        if direction == 'up' and self.last_direction == 'down':
             return
 
-        if direction == 'left' and self.direction == 'right':
+        if direction == 'left' and self.last_direction == 'right':
             return
 
-        if direction == 'down' and self.direction == 'up':
+        if direction == 'down' and self.last_direction == 'up':
             return
 
-        if direction == 'right' and self.direction == 'left':
+        if direction == 'right' and self.last_direction == 'left':
             return
 
         self.direction = direction
