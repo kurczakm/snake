@@ -2,7 +2,7 @@ import asyncio
 import websockets
 import json
 
-from game import BOARD_WIDTH, BOARD_HEIGHT, Player, players, play, get_players_info, start
+from game import BOARD_WIDTH, BOARD_HEIGHT, Player, players, play, get_players_info, start, result
 
 
 class Server:

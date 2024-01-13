@@ -7,6 +7,7 @@ TICK = 0.4
 players = {}
 started = False
 food = []
+result = 'IN_PROGRESS'
 
 
 async def play(server):
@@ -23,6 +24,26 @@ def next_turn():
         player.last_direction = player.direction
         player.move()
 
+    check_collisions()
+
+
+def check_collisions():
+    for playerName in players:
+        player = players[playerName]
+        head = player.body_segments[0]
+
+        for playerName2 in players:
+            player2 = players[playerName2]
+
+            for index, segment in enumerate(player2.body_segments):
+                if playerName2 == playerName and index == 0:
+                    continue
+
+                if segment == head:
+                    global started, result
+                    started = False
+                    result = 'GAME_OVER'
+
 
 def get_players_info():
     players_info = []
@@ -37,7 +58,8 @@ def get_players_info():
     return {
         'type': 'status',
         'food': food,
-        'players': players_info
+        'players': players_info,
+        'gameResult': result
     }
 
 
@@ -64,6 +86,8 @@ def add_food():
 
 
 def start():
+    global food
+    food = []
     add_food()
     global started
     started = True
