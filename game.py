@@ -105,4 +105,16 @@ class Player:
             add_food()
 
     def setDirection(self, direction):
+        if direction == 'up' and self.direction == 'down':
+            return
+
+        if direction == 'left' and self.direction == 'right':
+            return
+
+        if direction == 'down' and self.direction == 'up':
+            return
+
+        if direction == 'right' and self.direction == 'left':
+            return
+
         self.direction = direction
