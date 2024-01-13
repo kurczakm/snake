@@ -57,7 +57,7 @@ function handleMessage(data) {
             BOARD_HEIGHT = parsedData.height;
             createBoard();
             break;
-        case 'player_info':
+        case 'players_info':
             renderPosition(parsedData);
             break;
     }
