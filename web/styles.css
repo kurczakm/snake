@@ -11,3 +11,8 @@ table {
     margin-left: auto;
     margin-right: auto;
 }
+
+#status_container {
+    color: green;
+    visibility: hidden;
+}

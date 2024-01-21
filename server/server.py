@@ -24,7 +24,7 @@ async def send_game_info(websocket, game, join_key):
         'type': MessageType.GAME_INFO,
         'width': game.board_width,
         'height': game.board_height,
-        'join_key': join_key
+        'key': join_key
     }
     await websocket.send(json.dumps(game_info))
 

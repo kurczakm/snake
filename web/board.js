@@ -29,6 +29,8 @@ function handleButtons(websocket) {
             }
         }
         websocket.send(JSON.stringify(startAction));
+        removePlayButtonsAndFields();
+        document.getElementById('status_container').style.visibility = 'visible';
     });
 
     document.getElementById('join_button').addEventListener('click', () => {
@@ -42,7 +44,18 @@ function handleButtons(websocket) {
             }
         }
         websocket.send(JSON.stringify(startAction));
+        removePlayButtons();
     });
+}
+
+function removePlayButtonsAndFields() {
+    const startButton = document.getElementById('start_button');
+    const joinButton = document.getElementById('join_button');
+    const joinInput = document.getElementById('join_input');
+
+    startButton.remove();
+    joinButton.remove();
+    joinInput.remove();
 }
 
 function sendMoves(websocket) {
@@ -77,10 +90,14 @@ function handleMessage(data) {
         case 'game_info':
             BOARD_WIDTH = parsedData.width;
             BOARD_HEIGHT = parsedData.height;
+            const joinKey = parsedData.key;
+            document.getElementById('game_code').innerHTML = joinKey;
             createBoard();
             break;
         case 'status':
             renderPosition(parsedData);
+            const state = parsedData.state;
+            document.getElementById('state').innerHTML = state
             break;
     }
 }
