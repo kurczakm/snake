@@ -30,7 +30,7 @@ function handleButtons(websocket) {
         }
         websocket.send(JSON.stringify(startAction));
         removePlayButtonsAndFields();
-        document.getElementById('status_container').style.visibility = 'visible';
+        showStatus();
     });
 
     document.getElementById('join_button').addEventListener('click', () => {
@@ -44,7 +44,8 @@ function handleButtons(websocket) {
             }
         }
         websocket.send(JSON.stringify(startAction));
-        removePlayButtons();
+        removePlayButtonsAndFields();
+        showStatus();
     });
 }
 
@@ -56,6 +57,10 @@ function removePlayButtonsAndFields() {
     startButton.remove();
     joinButton.remove();
     joinInput.remove();
+}
+
+function showStatus() {
+    document.getElementById('status_container').style.visibility = 'visible';
 }
 
 function sendMoves(websocket) {
