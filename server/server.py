@@ -51,7 +51,7 @@ async def start(websocket, data):
 
     try:
         await send_game_info(websocket, game, join_key)
-        game.add_player(data['player']['name'])
+        game.add_player(data['player']['name'], data['player']['color'])
         await send_positions(game, connected)
         async for message in websocket:
             await handle_message(game, websocket, message)
@@ -79,7 +79,7 @@ async def join(websocket, data):
 
     try:
         await send_game_info(websocket, game, join_key)
-        game.add_player(data['player']['name'])
+        game.add_player(data['player']['name'], data['player']['color'])
         await send_positions(game, connected)
 
         play_task = asyncio.create_task(game.play(connected))
@@ -100,7 +100,7 @@ async def handle_message(game, websocket, message):
         case Action.MOVE:
             player = game.players[data['playerName']]
             direction = data['direction']
-            player.setDirection(direction)
+            player.set_direction(direction)
 
 
 async def main():

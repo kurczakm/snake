@@ -60,7 +60,8 @@ class Game:
             player = self.players[playerName]
             players_info.append({
                 'name': player.name,
-                'bodySegments': player.body_segments
+                'bodySegments': player.body_segments,
+                'color': player.color
             })
 
         return {
@@ -70,9 +71,9 @@ class Game:
             'state': self.state
         }
 
-    def add_player(self, name):
+    def add_player(self, name, color):
         x, y = self.get_random_free_coordinate()
-        player = Player(name, [[x, y]], Direction.DOWN)
+        player = Player(name, [[x, y]], Direction.DOWN, color)
         self.players[player.name] = player
 
     def get_random_free_coordinate(self):
@@ -104,11 +105,12 @@ class Game:
 
 
 class Player:
-    def __init__(self, name, body_segments, direction):
+    def __init__(self, name, body_segments, direction, color):
         self.name = name
         self.body_segments = body_segments
         self.direction = direction
         self.last_direction = direction
+        self.color = color
 
     def move(self, food):
         x, y = self.body_segments[0]
@@ -136,7 +138,7 @@ class Player:
             del food[food_eaten]
             return True
 
-    def setDirection(self, direction):
+    def set_direction(self, direction):
         if direction == Direction.UP and self.last_direction == Direction.DOWN:
             return
 

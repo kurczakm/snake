@@ -169,7 +169,7 @@ function renderPosition(info) {
         player.bodySegments.forEach((segment) => {
             try {
                 const cell = getBoardCell(segment[0], segment[1]);
-                cell.style.backgroundColor = playerColor;
+                cell.style.backgroundColor = player.color;
             } catch (error) {
                 // the cell is out off the board
             }
