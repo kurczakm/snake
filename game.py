@@ -10,11 +10,13 @@ food = []
 result = 'IN_PROGRESS'
 
 
-async def play(server):
+async def play(websocket):
+    from server import onTurnDone
+
     while True:
         if started:
             next_turn()
-            await server.onTurnDone()
+            await onTurnDone(websocket)
         await asyncio.sleep(TICK)
 
 
