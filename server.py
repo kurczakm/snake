@@ -9,7 +9,7 @@ from game import Game
 JOIN = {}
 
 
-async def onTurnDone(game, connected):
+async def on_turn_done(game, connected):
     await send_positions(game, connected)
 
 

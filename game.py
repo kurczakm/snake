@@ -13,12 +13,12 @@ class Game:
         self.result = 'WAITING_FOR_ANOTHER_PLAYER'
 
     async def play(self, connected):
-        from server import onTurnDone
+        from server import on_turn_done
 
         while True:
             if self.started:
                 self.next_turn()
-                await onTurnDone(self, connected)
+                await on_turn_done(self, connected)
             await asyncio.sleep(self.tick)
 
     def next_turn(self):
