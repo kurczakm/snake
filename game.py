@@ -1,5 +1,6 @@
 import asyncio
 import random
+from constants import State, Direction, MessageType
 
 
 class Game:
@@ -10,7 +11,7 @@ class Game:
         self.players = {}
         self.started = False
         self.food = []
-        self.result = 'WAITING_FOR_ANOTHER_PLAYER'
+        self.state = State.WAITING_FOR_ANOTHER_PLAYER
 
     async def play(self, connected):
         from server import on_turn_done
@@ -38,7 +39,7 @@ class Game:
 
             if head[0] < 0 or head[0] >= self.board_width or head[1] < 0 or head[1] >= self.board_height:
                 self.started = False
-                self.result = 'GAME_OVER'
+                self.state = State.GAME_OVER
                 return
 
             for playerName2 in self.players:
@@ -50,7 +51,7 @@ class Game:
 
                     if segment == head:
                         self.started = False
-                        self.result = 'GAME_OVER'
+                        self.state = State.GAME_OVER
                         return
 
     def get_players_info(self):
@@ -63,15 +64,15 @@ class Game:
             })
 
         return {
-            'type': 'status',
+            'type': MessageType.STATUS,
             'food': self.food,
             'players': players_info,
-            'gameResult': self.result
+            'state': self.state
         }
 
     def add_player(self, name):
         x, y = self.get_random_free_coordinate()
-        player = Player(name, [[x, y]], 'down')
+        player = Player(name, [[x, y]], Direction.DOWN)
         self.players[player.name] = player
 
     def get_random_free_coordinate(self):
@@ -99,6 +100,7 @@ class Game:
         self.food = []
         self.add_food()
         self.started = True
+        self.state = State.GAME_IN_PROGRESS
 
 
 class Player:
@@ -111,13 +113,13 @@ class Player:
     def move(self, food):
         x, y = self.body_segments[0]
         match self.direction:
-            case 'left':
+            case Direction.LEFT:
                 x = x - 1
-            case 'right':
+            case Direction.RIGHT:
                 x = x + 1
-            case 'up':
+            case Direction.UP:
                 y = y - 1
-            case 'down':
+            case Direction.DOWN:
                 y = y + 1
         self.body_segments.insert(0, [x, y])
 
@@ -135,16 +137,16 @@ class Player:
             return True
 
     def setDirection(self, direction):
-        if direction == 'up' and self.last_direction == 'down':
+        if direction == Direction.UP and self.last_direction == Direction.DOWN:
             return
 
-        if direction == 'left' and self.last_direction == 'right':
+        if direction == Direction.LEFT and self.last_direction == Direction.RIGHT:
             return
 
-        if direction == 'down' and self.last_direction == 'up':
+        if direction == Direction.DOWN and self.last_direction == Direction.UP:
             return
 
-        if direction == 'right' and self.last_direction == 'left':
+        if direction == Direction.RIGHT and self.last_direction == Direction.LEFT:
             return
 
         self.direction = direction

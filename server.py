@@ -5,6 +5,7 @@ import websockets
 import json
 
 from game import Game
+from constants import Action, MessageType
 
 JOIN = {}
 
@@ -20,7 +21,7 @@ async def send_positions(game, connected):
 
 async def send_game_info(websocket, game, join_key):
     game_info = {
-        'type': 'game_info',
+        'type': MessageType.GAME_INFO,
         'width': game.board_width,
         'height': game.board_height,
         'join_key': join_key
@@ -35,9 +36,9 @@ async def handler(websocket):
 
 async def handle_init_message(websocket, init_message):
     data = json.loads(init_message)
-    if data['action'] == 'start':
+    if data['action'] == Action.START:
         await start(websocket, data)
-    if data['action'] == 'join':
+    if data['action'] == Action.JOIN:
         await join(websocket, data)
 
 
@@ -60,7 +61,7 @@ async def start(websocket, data):
 
 async def error(websocket, message):
     event = {
-        'type': 'error',
+        'type': MessageType.ERROR,
         'message': message
     }
     await websocket.send(json.dumps(event))
@@ -96,7 +97,7 @@ async def handle_message(game, websocket, message):
     data = json.loads(message)
 
     match data['action']:
-        case 'move':
+        case Action.MOVE:
             player = game.players[data['playerName']]
             direction = data['direction']
             player.setDirection(direction)
