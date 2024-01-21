@@ -14,11 +14,12 @@ const DOWN_DIRECTION = 'down';
 
 window.addEventListener('DOMContentLoaded', () => {
     const websocket = new WebSocket('ws://localhost:8001/');
+    handleServerData(websocket);
+    handleButtons(websocket);
+    sendMoves(websocket);
+});
 
-    websocket.addEventListener('message', ({ data }) => {
-        handleMessage(data)
-    });
-
+function handleButtons(websocket) {
     document.getElementById('start_button').addEventListener('click', () => {
         const startAction = {
             action: 'start',
@@ -29,7 +30,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         websocket.send(JSON.stringify(startAction));
     });
+}
 
+function sendMoves(websocket) {
     document.addEventListener('keydown', event => {
         switch (event.key) {
             case 'ArrowLeft':
@@ -46,7 +49,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 break;
         }
     });
-});
+}
+
+function handleServerData(websocket) {
+    websocket.addEventListener('message', ({ data }) => {
+        handleMessage(data)
+    });
+}
 
 function handleMessage(data) {
     const parsedData = JSON.parse(data);
