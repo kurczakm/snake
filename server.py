@@ -2,7 +2,7 @@ import asyncio
 import websockets
 import json
 
-from game import Player, Game
+from game import Game
 
 
 async def onTurnDone(websocket, game):
@@ -34,8 +34,7 @@ async def handle_init_message(websocket, init_message):
         play_task = asyncio.create_task(game.play(websocket))
         game.start()
         await send_game_info(websocket, game)
-        player1 = Player(data['player']['name'], data['player']['color'], [[1, 1]], 'down')
-        game.players[player1.name] = player1
+        game.add_player(data['player']['name'])
 
         async for message in websocket:
             await handle_message(game, websocket, message)

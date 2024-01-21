@@ -17,6 +17,7 @@ class Game:
 
         while True:
             if self.started:
+                print('next turn')
                 self.next_turn()
                 await onTurnDone(websocket, self)
             await asyncio.sleep(self.tick)
@@ -59,7 +60,6 @@ class Game:
             player = self.players[playerName]
             players_info.append({
                 'name': player.name,
-                'color': player.color,
                 'bodySegments': player.body_segments
             })
 
@@ -70,25 +70,30 @@ class Game:
             'gameResult': self.result
         }
 
-    def add_food(self):
+    def add_player(self, name):
+        x, y = self.get_random_free_coordinate()
+        player = Player(name, [[x, y]], 'down')
+        self.players[player.name] = player
+
+    def get_random_free_coordinate(self):
         x_candidates = list(range(0, self.board_width))
         y_candidates = list(range(0, self.board_height))
 
         for playerName in self.players:
             player = self.players[playerName]
             for segment in player.body_segments:
-                try:
-                    x_candidates.remove(segment[0])
-                except ValueError:
-                    pass
-                try:
-                    y_candidates.remove(segment[1])
-                except ValueError:
-                    pass
+                remove_coordinate(x_candidates, y_candidates, segment)
+
+        for food in self.food:
+            remove_coordinate(x_candidates, y_candidates, food)
 
         x = random.choice(x_candidates)
         y = random.choice(y_candidates)
 
+        return x, y
+
+    def add_food(self):
+        x, y = self.get_random_free_coordinate()
         self.food.append([x, y])
 
     def start(self):
@@ -98,9 +103,8 @@ class Game:
 
 
 class Player:
-    def __init__(self, name, color, body_segments, direction):
+    def __init__(self, name, body_segments, direction):
         self.name = name
-        self.color = color
         self.body_segments = body_segments
         self.direction = direction
         self.last_direction = direction
@@ -145,3 +149,14 @@ class Player:
             return
 
         self.direction = direction
+
+
+def remove_coordinate(x_candidates, y_candidates, coordinate):
+    try:
+        x_candidates.remove(coordinate[0])
+    except ValueError:
+        pass
+    try:
+        y_candidates.remove(coordinate[1])
+    except ValueError:
+        pass
