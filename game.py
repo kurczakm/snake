@@ -6,20 +6,19 @@ class Game:
     def __init__(self):
         self.board_width = 10
         self.board_height = 10
-        self.tick = 0.4
+        self.tick = 3
         self.players = {}
         self.started = False
         self.food = []
-        self.result = 'IN_PROGRESS'
+        self.result = 'WAITING_FOR_ANOTHER_PLAYER'
 
-    async def play(self, websocket):
+    async def play(self, connected):
         from server import onTurnDone
 
         while True:
             if self.started:
-                print('next turn')
                 self.next_turn()
-                await onTurnDone(websocket, self)
+                await onTurnDone(self, connected)
             await asyncio.sleep(self.tick)
 
     def next_turn(self):

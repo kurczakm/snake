@@ -1,8 +1,8 @@
 var BOARD_WIDTH;
 var BOARD_HEIGHT;
 
-var playerName = 'player1';
-var playerColor = 'purple';
+var playerName = 'player' + Math.floor(Math.random() * 1000000);
+var playerColor = '#'+(0x1000000+Math.random()*0xffffff).toString(16).substr(1,6);
 
 const BOARD_TR_PREFIX = 'board_tr_';
 const BOARD_TD_PREFIX = 'board_td_';
@@ -23,6 +23,19 @@ function handleButtons(websocket) {
     document.getElementById('start_button').addEventListener('click', () => {
         const startAction = {
             action: 'start',
+            player: {
+                name: playerName,
+                color: playerColor
+            }
+        }
+        websocket.send(JSON.stringify(startAction));
+    });
+
+    document.getElementById('join_button').addEventListener('click', () => {
+        const joinKey = document.getElementById('join_input').value;
+        const startAction = {
+            action: 'join',
+            key: joinKey,
             player: {
                 name: playerName,
                 color: playerColor
