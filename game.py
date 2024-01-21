@@ -37,7 +37,7 @@ class Game:
             player = self.players[playerName]
             head = player.body_segments[0]
 
-            if head[0] < 0 or head[0] > self.board_width or head[1] < 0 or head[1] > self.board_height:
+            if head[0] < 0 or head[0] >= self.board_width or head[1] < 0 or head[1] >= self.board_height:
                 self.started = False
                 self.result = 'GAME_OVER'
                 return
