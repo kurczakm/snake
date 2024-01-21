@@ -128,8 +128,12 @@ function renderPosition(info) {
 
     info.players.forEach((player) => {
         player.bodySegments.forEach((segment) => {
-            const cell = getBoardCell(segment[0], segment[1]);
-            cell.style.backgroundColor = playerColor;
+            try {
+                const cell = getBoardCell(segment[0], segment[1]);
+                cell.style.backgroundColor = playerColor;
+            } catch (error) {
+                // the cell is out off the board
+            }
         });
     });
 
