@@ -7,7 +7,7 @@ class Game:
     def __init__(self):
         self.board_width = 10
         self.board_height = 10
-        self.tick = 3
+        self.tick = 1
         self.players = {}
         self.started = False
         self.food = []
