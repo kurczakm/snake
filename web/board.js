@@ -13,7 +13,7 @@ const UP_DIRECTION = 'up';
 const DOWN_DIRECTION = 'down';
 
 window.addEventListener('DOMContentLoaded', () => {
-    const websocket = new WebSocket('ws://localhost:8001/');
+    const websocket = new WebSocket('wss://snake-t8v9.onrender.com');
     handleServerData(websocket);
     handleButtons(websocket);
     sendMoves(websocket);
