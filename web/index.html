@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <head>
     <title>Snake</title>
-    <link rel="stylesheet" href="styles.css">
+   <link rel="stylesheet" href="styles.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Black+Ops+One&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <button id="start_button">START</button>
-    <input id="join_input">
-    <button id="join_button">JOIN</button>
-    <div id="status_container">
-        <div>
-            Status: <span id="state"></span>
-        </div>
-        <div>
-            Game code: <span id="game_code"></span>
-        </div>
-    </div>
-    <script type="text/javascript" src="./board.js"></script>
+	<div class="container">
+		<button id="start_button">START</button>
+		<input id="join_input" placeholder="Paste GAME CODE">
+		<button id="join_button">JOIN</button>
+		<div id="status_container">
+			<div>
+				Status: <span id="state"></span>
+			</div>
+			<div>
+				Game code: <span id="game_code"></span>
+			</div>
+		</div>
+			<script type="text/javascript" src="./board.js"></script>
+	</div>
 </body>

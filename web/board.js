@@ -2,8 +2,10 @@ var BOARD_WIDTH;
 var BOARD_HEIGHT;
 
 var playerName = 'player' + Math.floor(Math.random() * 1000000);
+var playerColor = '#00F';
+var playerColor2 = '#F00';/* 
 var playerColor = '#'+(0x1000000+Math.random()*0xffffff).toString(16).substr(1,6);
-
+*/
 const BOARD_TR_PREFIX = 'board_tr_';
 const BOARD_TD_PREFIX = 'board_td_';
 
@@ -13,7 +15,7 @@ const UP_DIRECTION = 'up';
 const DOWN_DIRECTION = 'down';
 
 window.addEventListener('DOMContentLoaded', () => {
-    const websocket = new WebSocket('wss://snake-t8v9.onrender.com');
+    const websocket = new WebSocket('wss://snake-t8v9.onrender.com');	
     handleServerData(websocket);
     handleButtons(websocket);
     sendMoves(websocket);
@@ -40,7 +42,7 @@ function handleButtons(websocket) {
             key: joinKey,
             player: {
                 name: playerName,
-                color: playerColor
+                color: playerColor2
             }
         }
         websocket.send(JSON.stringify(startAction));
@@ -118,7 +120,7 @@ function move(direction, websocket) {
 }
 
 function createBoard() {
-    const body = document.getElementsByTagName('body')[0];
+    const body = document.getElementsByClassName('container')[0];
     
     const board = document.createElement('table');
     board.id = 'board';
@@ -161,7 +163,7 @@ function clearBoard() {
     const cells = document.getElementsByTagName('td');
     console.log(cells);
     for (var i = 0; i < cells.length; i++) {
-        cells[i].style.backgroundColor = 'gray';
+        cells[i].style.backgroundColor = '#006400';
     }
 }
 
@@ -183,6 +185,6 @@ function renderPosition(info) {
 
     info.food.forEach((food) => {
         const cell = getBoardCell(food[0], food[1]);
-        cell.style.backgroundColor = 'red';
+        cell.style.backgroundColor = '#94C794';
     });
 }
